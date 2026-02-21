@@ -38,5 +38,20 @@
  *   // => { selected: [{ color: "golden", length: 5, cost: 250 }], totalLength: 5, totalCost: 250 }
  */
 export function diwaliLightsPlan(lightStrings, budget) {
-  // Your code here
+  if (!Array.isArray(lightStrings) || typeof budget !== 'number' || budget <= 0) return { selected: [], totalLength: 0, totalCost: 0 };
+  const rates = { golden: 50, multicolor: 40, white: 30 };
+  const selected = [];
+  let totalCost = 0;
+  for (const light of lightStrings) {
+    const rate = rates[light.color] || 35;
+    const cost = light.length * rate;
+    selected.push({ color: light.color, length: light.length, cost });
+    totalCost += cost;
+  }
+  while (totalCost > budget && selected.length > 0) {
+    const removed = selected.pop();
+    totalCost -= removed.cost;
+  }
+  const totalLength = selected.reduce((sum, s) => sum + s.length, 0);
+  return { selected, totalLength, totalCost };
 }
